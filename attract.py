@@ -93,10 +93,10 @@ def trajectory(fn, x0, y0, a, b=0, c=0, d=0, e=0, f=0, n=n):
     return pd.DataFrame(dict(x=x,y=y))
 
 
-def dsplot(fn, vals, n=n, cmap=viridis, label=True):
+def dsplot(fn, attractors, n=n, cmap=viridis, label=True):
     """Return a Datashader image by collecting `n` trajectory points for the given attractor `fn`"""
-    lab = ("{}, "*(len(vals)-1)+" {}").format(*vals) if label else None
-    df  = trajectory(fn, *vals, n=n)
+    lab = ("{}, "*(len(attractors)-1)+" {}").format(*attractors) if label else None
+    df  = trajectory(fn, *attractors, n=n)
     cvs = ds.Canvas(plot_width = 700, plot_height = 700)
     agg = cvs.points(df, 'x', 'y')
     img = tf.shade(agg, cmap=cmap, name=lab)
@@ -107,23 +107,14 @@ palette["viridis"]=viridis
 palette["inferno"]=inferno
 
 import yaml
-vals = yaml.load(open("strange_attractors.yml","r"), Loader=yaml.FullLoader)
+attractors = yaml.load(open("strange_attractors.yml","r"), Loader=yaml.FullLoader)
 
-def args(name):
-    """Return a list of available argument lists for the given type of attractor"""
-    return [v[1:] for v in vals if v[0]==name]
+for i, attractor in enumerate(attractors):
+    funcname, cmap, options = attractor[0], attractor[1], attractor[2:]
+    func = eval(funcname)
+    print(attractor, func)
+    img = dsplot(func, options, cmap=palette[cmap][::-1])
 
-def plot(fn, vals=None, **kw):
-    """Plot the given attractor `fn` once per provided set of arguments."""
-    vargs=args(fn.__name__) if vals is None else vals
-    return tf.Images(*[dsplot(fn, v[1:], cmap=palette[v[0]][::-1], **kw) for v in vargs]).cols(4)
-
-for attr_name in 
-attr_name = "Chor1"
-print(f"Plotting images using {attr_name} attractor")
-imgs = plot(eval(attr_name))
-for i, img in enumerate(imgs.images):
-    print(i)
-    export_image(img=img, filename=f'{attr_name}_{i}', fmt=".png",  export_path=".",
+    export_image(img=img, filename=f'{funcname}_{i}', fmt=".png",  export_path=".",
                  background="#FFF4CA")
 

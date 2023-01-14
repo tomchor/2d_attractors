@@ -78,7 +78,7 @@ def Symmetric_Icon(x, y, a, b, g, om, l, d, *o):
 
 
 
-n=int(1e7)
+n=int(1e8)
 
 @jit(nopython=True)
 def trajectory_coords(fn, x0, y0, a, b=0, c=0, d=0, e=0, f=0, n=n):
@@ -97,7 +97,7 @@ def dsplot(fn, attractors, n=n, cmap=viridis, label=True):
     """Return a Datashader image by collecting `n` trajectory points for the given attractor `fn`"""
     lab = ("{}, "*(len(attractors)-1)+" {}").format(*attractors) if label else None
     df  = trajectory(fn, *attractors, n=n)
-    cvs = ds.Canvas(plot_width = 700, plot_height = 700)
+    cvs = ds.Canvas(plot_width = 1600, plot_height = 1600)
     agg = cvs.points(df, 'x', 'y')
     img = tf.shade(agg, cmap=cmap, name=lab)
     return img
@@ -115,6 +115,7 @@ for i, attractor in enumerate(attractors):
     print(attractor, func)
     img = dsplot(func, options, cmap=palette[cmap][::-1])
 
-    export_image(img=img, filename=f'{funcname}_{i}', fmt=".png",  export_path=".",
+    line_number = i+1
+    export_image(img=img, filename=f'{line_number}_{funcname}', fmt=".png",  export_path=".",
                  background="#FFF4CA")
 

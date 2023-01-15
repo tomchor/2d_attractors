@@ -1,34 +1,42 @@
 using DynamicalSystems
 using NCDatasets
+using YAML
 
-N = 1e7
+N = 1e6
 
-function Clifford!(dx, x, p, n)
-    dx[1] = sin(p[1] * x[2]) + p[3] * cos(p[1] * x[1])
-    dx[2] = sin(p[2] * x[1]) + p[4] * cos(p[2] * x[2])
-    return
+include("attractor_functions.jl")
+
+attractors = YAML.load_file("strange_attractors.yml")
+
+for (i, attractor) in enumerate(attractors)
+    funcname, cmap, options... = attractor
+    @show i funcname cmap options
+    @info ""
+
+    global x⃗₀ = options[1:2]
+    global params = options[3:end]
+
+    funcsymbol = Meta.parse(funcname)
+    x⃗₀ = convert(Array{Float64,1}, x⃗₀)
+    params = convert(Array{Float64,1}, params)
+
+    dsystem = DiscreteDynamicalSystem(eval(funcsymbol), x⃗₀, params)
+
+    traj = trajectory(dsystem, N)
+
+    ncfile = NCDataset("1_Clifford.nc", "c")
+
+    defDim(ncfile,"step", Int(N+1))
+
+    ncfile.attrib["title"] = "Clifford attractor number 1"
+    ncfile.attrib["initial conditions"] = string(params)
+
+    x = defVar(ncfile, "x", Float32, ("step",))
+    y = defVar(ncfile, "y", Float32, ("step",))
+
+    x = Matrix(traj)[:,1]
+    y = Matrix(traj)[:,2]
+
+    close(ncfile)
+
 end
-
-params = [1.782, 2.234, 1.113, 0.1982]
-dsystem = DiscreteDynamicalSystem(Clifford!, zeros(2), params)
-
-traj = trajectory(dsystem, N)
-
-ncfile = NCDataset("1_Clifford.nc", "c")
-
-# Define the dimension "lon" and "lat" with the size 100 and 110 resp.
-defDim(ncfile,"step", Int(N+1))
-
-ncfile.attrib["title"] = "Clifford attractor number 1"
-ncfile.attrib["initial conditions"] = string(params)
-
-# Define the variables temperature
-x = defVar(ncfile, "x", Float32, ("step",))
-y = defVar(ncfile, "y", Float32, ("step",))
-
-# write a single column
-x = Matrix(traj)[:,1]
-y = Matrix(traj)[:,2]
-
-close(ncfile)
-

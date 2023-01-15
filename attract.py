@@ -46,11 +46,6 @@ def Hopalong1(x, y, a, b, c, *o):
            a - x
 
 @jit(nopython=True)
-def Hopalong2(x, y, a, b, c, *o):
-    return y - 1.0 - sqrt(fabs(b * x - 1.0 - c)) * np.sign(x - 1.0), \
-           a - x - 1.0
-
-@jit(nopython=True)
 def G(x, mu):
     return mu * x + 2 * (1 - mu) * x**2 / (1.0 + x**2)
 

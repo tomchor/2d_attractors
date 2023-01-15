@@ -24,11 +24,11 @@ for (i, attractor) in enumerate(attractors)
 
     traj = trajectory(dsystem, N)
 
-    ncfile = NCDataset("1_Clifford.nc", "c")
+    ncfile = NCDataset("data/$(i)_$funcname.nc", "c")
 
     defDim(ncfile,"step", Int(N+1))
 
-    ncfile.attrib["title"] = "Clifford attractor number 1"
+    ncfile.attrib["title"] = "$funcname attractor number $i"
     ncfile.attrib["initial conditions"] = string(params)
 
     x = defVar(ncfile, "x", Float32, ("step",))

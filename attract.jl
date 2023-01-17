@@ -2,7 +2,7 @@ using DynamicalSystems
 using NCDatasets
 using YAML
 
-N = 1e6
+N = 1e8
 
 include("attractor_functions.jl")
 
@@ -10,11 +10,10 @@ attractors = YAML.load_file("strange_attractors.yml")
 
 for (i, attractor) in enumerate(attractors)
     funcname, cmap, options... = attractor
-    @show i funcname cmap options
-    @info ""
+    @info i funcname cmap options
 
-    global x⃗₀ = options[1:2]
-    global params = options[3:end]
+    x⃗₀ = options[1:2]
+    params = options[3:end]
 
     funcsymbol = Meta.parse(funcname)
     x⃗₀ = convert(Array{Float64,1}, x⃗₀)
@@ -22,21 +21,28 @@ for (i, attractor) in enumerate(attractors)
 
     dsystem = DiscreteDynamicalSystem(eval(funcsymbol), x⃗₀, params)
 
-    traj = trajectory(dsystem, N)
+    global traj = trajectory(dsystem, N)
 
+    @info "Writing to file..."
     ncfile = NCDataset("data/$(i)_$funcname.nc", "c")
 
-    defDim(ncfile,"step", Int(N+1))
+    defDim(ncfile,"step", length(traj))
 
     ncfile.attrib["title"] = "$funcname attractor number $i"
     ncfile.attrib["initial conditions"] = string(params)
 
-    x = defVar(ncfile, "x", Float32, ("step",))
-    y = defVar(ncfile, "y", Float32, ("step",))
+    x = defVar(ncfile, "x", Float64, ("step",))
+    y = defVar(ncfile, "y", Float64, ("step",))
 
-    x = Matrix(traj)[:,1]
-    y = Matrix(traj)[:,2]
+    x[:] = Matrix(traj)[:,1]
+    y[:] = Matrix(traj)[:,2]
 
     close(ncfile)
 
+#    ncfile = NCDataset("data/$(i)_$funcname.nc", "c")
+#    @show ncfile["x"][1:10]
+#    close(ncfile)
+#    pause
+
 end
+

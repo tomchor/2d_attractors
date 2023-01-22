@@ -11,27 +11,28 @@ palette["inferno"]=inferno
 cmap=palette["fire"][::-1]
 
 cmaps = dict(bgyw = palette["bgyw"],
-             viridis = palette["viridis"],
              inferno = palette["inferno"],
              fire = palette["fire"][::-1],
              fire2 = palette["fire"],
              bmy = palette["bmy"],
-             kgy = palette["kgy"],
-             bgy = palette["bgy"],
-             bmw = palette["bmw"],
              kbc = palette["kbc"],
-             kb = palette["kb"]
              )
 
+backgrounds = [#"#611119",
+               "black",
+               #"grey",
+               #"#FFF4CA",
+               #"#0c2c53",
+               ]
 
 import glob
 import yaml
 import os
 directory = 'data'
 
-pixelsize = 2000
+pixelsize = 1000
 
-def dsplot(df, cmap=viridis, label=True):
+def dsplot(df, cmap=inferno, label=True):
     """Return a Datashader image by collecting `n` trajectory points for the given attractor `fn`"""
     lab = os.path.basename(df.name) if label else None
     cvs = ds.Canvas(plot_width = pixelsize, plot_height = pixelsize)
@@ -53,11 +54,11 @@ for i, file in enumerate(natsorted(filelist)):
     aname = df.name.replace('.nc', '')
 
     for cname, cmap in cmaps.items():
-        print(aname, cname)
-        img = dsplot(df, cmap=cmap)
+        for background in backgrounds:
+            print(aname, cname, background)
+            img = dsplot(df, cmap=cmap)
 
-        export_image(img=img, filename=f"figures/{aname}_{cname}", fmt=".png",  export_path=".",
-                     background="black")
-                     #background="#FFF4CA")
+            export_image(img=img, filename=f"figures/{aname}_{cname}_{background}", fmt=".png",  export_path=".",
+                         background=background)
 
 

@@ -10,6 +10,20 @@ palette["viridis"]=viridis
 palette["inferno"]=inferno
 cmap=palette["fire"][::-1]
 
+cmaps = dict(bgyw = palette["bgyw"],
+             viridis = palette["viridis"],
+             inferno = palette["inferno"],
+             fire = palette["fire"][::-1],
+             fire2 = palette["fire"],
+             bmy = palette["bmy"],
+             kgy = palette["kgy"],
+             bgy = palette["bgy"],
+             bmw = palette["bmw"],
+             kbc = palette["kbc"],
+             kb = palette["kb"]
+             )
+
+
 import glob
 import yaml
 import os
@@ -28,29 +42,22 @@ def dsplot(df, cmap=viridis, label=True):
 
 
 fpath = os.path.join(directory, "*.nc")
-filelist = sorted(glob.glob(fpath))[6:]
+filelist = sorted(glob.glob(fpath))
 attractors = yaml.load(open("strange_attractors.yml","r"), Loader=yaml.FullLoader)
+
 for i, file in enumerate(natsorted(filelist)):
     print(file)
 
     df = xr.open_dataset(file).to_dataframe()
     df.name = os.path.basename(file)
-    img = dsplot(df, cmap=inferno)
+    aname = df.name.replace('.nc', '')
 
-    export_image(img=img, filename=f"figures/{df.name}", fmt=".png",  export_path=".",
-                 background="black")
-                 #background="#FFF4CA")
+    for cname, cmap in cmaps.items():
+        print(aname, cname)
+        img = dsplot(df, cmap=cmap)
 
+        export_image(img=img, filename=f"figures/{aname}_{cname}", fmt=".png",  export_path=".",
+                     background="black")
+                     #background="#FFF4CA")
 
-
-pause
-for i, attractor in enumerate(attractors):
-    funcname, cmap, options = attractor[0], attractor[1], attractor[2:]
-    func = eval(funcname)
-    print(attractor, func)
-    img = dsplot(func, options, cmap=palette[cmap][::-1])
-
-    line_number = i+1
-    export_image(img=img, filename=f'{line_number}_{funcname}', fmt=".png",  export_path=".",
-                 background="#FFF4CA")
 

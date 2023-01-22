@@ -9,11 +9,11 @@ include("attractor_functions.jl")
 attractors = YAML.load_file("strange_attractors.yml")
 
 for (i, attractor) in enumerate(attractors)
-    funcname, options... = attractor
-    @info i funcname options
+    funcname = attractor["funcname"]
 
-    x⃗₀ = options[1:2]
-    params = options[3:end]
+    x⃗₀ = attractor["IC"]
+    params = attractor["params"]
+    @info i funcname x⃗₀ params
 
     funcsymbol = Meta.parse(funcname)
     x⃗₀ = convert(Array{Float64,1}, x⃗₀)

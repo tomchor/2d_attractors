@@ -1,14 +1,79 @@
-- [Clifford, 0, 0, 1.7, 1.7, 0.6, 1.2]
-- [Clifford, 0, 0, 1.7, 0.7, 1.4, 2.0]
-- [Clifford, 0, 0, 0.77, 1.99, -1.31, -1.45]
-- [Clifford, 0, 0, 0.75, 1.34, -1.93, 1.0]
-- [Clifford, 0, 0, -1.7, 1.5, -0.5, 0.7]
-- [Clifford, 0, 0, -3.086, -2.986, -2.315, 0.4396]
-- [De_Jong, 0, 0, 1.7, 1.7, 0.6, 1.2]
-- [De_Jong, 0, 0, 2.01, -2.53, 1.61, -0.33]
-- [Svensson, 0, 0, -0.91, -1.29, -1.97, -1.56]
-- [Bedhead, 1, 1, -0.67, 0.83]
-- [Fractal_Dream, 0.1, 0.1, -1.9956, -1.4528, -2.6206, 0.8517]
-- [Hopalong1, 0, 0, 2.0, 1.0, 0.0]
-- [Gumowski_Mira, 0, 1, 0.008, 0.05, -0.45]
-- [Chor1, 0, 0, 1.782, 2.234, 1.113, 0.1982]
+- funcname: Clifford
+  IC: [0, 0]
+  params: [1.7, 1.7, 0.6, 1.2]
+  cmap_names:
+    - inferno
+- funcname: Clifford
+  IC: [0, 0]
+  params: [1.7, 0.7, 1.4, 2.0]
+  cmap_names: 
+    - fire
+    - fire2
+- funcname: Clifford
+  IC : [0, 0]
+  params : [0.77, 1.99, -1.31, -1.45]
+  cmap_names:
+    - fire
+    - fire2
+- funcname: Clifford
+  IC: [0, 0]
+  params: [0.75, 1.34, -1.93, 1.0]
+  cmap_names:
+    - fire
+    - fire2
+    - inferno
+- funcname: Clifford
+  IC: [0, 0]
+  params: [-1.7, 1.5, -0.5, 0.7]
+  cmap_names:
+    - bgyw
+    - fire2
+- funcname: Clifford
+  IC: [0, 0]
+  params: [-3.086, -2.986, -2.315, 0.4396]
+  cmap_names:
+    - fire2
+- funcname: De_Jong
+  IC: [0, 0]
+  params: [1.7, 1.7, 0.6, 1.2]
+  cmap_names:
+    - bgyw
+- funcname: De_Jong
+  IC: [0, 0]
+  params: [2.01, -2.53, 1.61, -0.33]
+  cmap_names:
+    - inferno
+    - kbc
+- funcname: Svensson
+  IC: [0, 0]
+  params: [-0.91, -1.29, -1.97, -1.56]
+  cmap_names:
+    - fire2
+- funcname: Bedhead
+  IC: [1, 1]
+  params: [-0.67, 0.83]
+  cmap_names:
+    - fire2
+- funcname: Fractal_Dream
+  IC: [0.1, 0.1]
+  params: [-1.9956, -1.4528, -2.6206, 0.8517]
+  cmap_names:
+    - fire
+    - fire2
+- funcname: Hopalong1
+  IC: [0, 0]
+  params: [2.0, 1.0, 0.0]
+  cmap_names:
+    - fire2
+- funcname: Gumowski_Mira
+  IC: [0, 1]
+  params: [0.008, 0.05, -0.45]
+  cmap_names:
+    - bmy
+- funcname: Chor1
+  IC: [0, 0]
+  params: [1.782, 2.234, 1.113, 0.1982]
+  cmap_names:
+    - fire
+    - fire2
+

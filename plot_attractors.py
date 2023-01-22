@@ -18,11 +18,11 @@ cmaps = dict(bgyw = palette["bgyw"],
              kbc = palette["kbc"],
              )
 
-backgrounds = [#"#611119",
+backgrounds = ["#611119",
                "black",
-               #"grey",
-               #"#FFF4CA",
-               #"#0c2c53",
+               "grey",
+               "#FFF4CA",
+               "#0c2c53",
                ]
 
 import glob
@@ -46,17 +46,17 @@ fpath = os.path.join(directory, "*.nc")
 filelist = sorted(glob.glob(fpath))
 attractors = yaml.load(open("strange_attractors.yml","r"), Loader=yaml.FullLoader)
 
-for i, file in enumerate(natsorted(filelist)):
+for attractor, file in zip(attractors, natsorted(filelist)):
     print(file)
 
     df = xr.open_dataset(file).to_dataframe()
     df.name = os.path.basename(file)
     aname = df.name.replace('.nc', '')
 
-    for cname, cmap in cmaps.items():
+    for cname in attractor["cmap_names"]:
         for background in backgrounds:
             print(aname, cname, background)
-            img = dsplot(df, cmap=cmap)
+            img = dsplot(df, cmap=cmaps[cname])
 
             export_image(img=img, filename=f"figures/{aname}_{cname}_{background}", fmt=".png",  export_path=".",
                          background=background)

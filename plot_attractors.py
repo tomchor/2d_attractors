@@ -18,12 +18,6 @@ cmaps = dict(bgyw = palette["bgyw"],
              kbc = palette["kbc"],
              )
 
-backgrounds = ["#611119",
-               "black",
-               "grey",
-               "#FFF4CA",
-               "#0c2c53",
-               ]
 
 import glob
 import yaml
@@ -53,12 +47,11 @@ for attractor, file in zip(attractors, natsorted(filelist)):
     df.name = os.path.basename(file)
     aname = df.name.replace('.nc', '')
 
-    for cname in attractor["cmap_names"]:
-        for background in backgrounds:
-            print(aname, cname, background)
-            img = dsplot(df, cmap=cmaps[cname])
+    for cname, background in attractor["pairs"]:
+        print(aname, cname, background)
+        img = dsplot(df, cmap=cmaps[cname])
 
-            export_image(img=img, filename=f"figures/{aname}_{cname}_{background}", fmt=".png",  export_path=".",
-                         background=background)
+        export_image(img=img, filename=f"figures/{aname}_{cname}_{background}", fmt=".png",  export_path=".",
+                     background=background)
 
 
